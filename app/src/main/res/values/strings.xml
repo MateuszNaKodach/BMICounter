@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SWIM_Lab1</string>
+    <string name="mass">Mass</string>
+    <string name="your_mass_here">Your mass goes here</string>
+    <string name="your_height_here">Your height goes here</string>
+    <string name="height">Height</string>
+    <string name="count_bmi">Count BMI</string>
+    <string name="your_bmi">Your BMI: %1$d</string>
+</resources>
