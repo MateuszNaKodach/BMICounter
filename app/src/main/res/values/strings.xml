@@ -1,9 +1,22 @@
 <resources>
-    <string name="app_name">SWIM_Lab1</string>
-    <string name="mass">Mass</string>
+    <string name="app_name">BMI Counter</string>
+    <string name="mass">Mass [%1$s]:</string>
     <string name="your_mass_here">Your mass goes here</string>
     <string name="your_height_here">Your height goes here</string>
-    <string name="height">Height</string>
+    <string name="height">Height [%1$s]:</string>
     <string name="count_bmi">Count BMI</string>
-    <string name="your_bmi">Your BMI: %1$d</string>
+    <string name="your_bmi">Your BMI: %1$s</string>
+    <string name="empty_bmi">---</string>
+    <string name="si_units">SI Units</string>
+    <string name="imperial_units">Imperial Units</string>
+    <string name="pound_lb">lb</string>
+    <string name="inch_in">in</string>
+    <string name="kilogram_kg">kg</string>
+    <string name="meter_m">m</string>
+    <string name="underweight">underweight</string>
+    <string name="overweight">overweight</string>
+    <string name="correct">correct</string>
+    <string name="invalidate_field_message">Please fill all fields with real data.</string>
+    <string name="unreal_input_message">Body like this can\'t exists! Please input real data.</string>
+
 </resources>

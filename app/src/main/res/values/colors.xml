@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorOverweight">#e22525</color>
+    <color name="colorUnderweight">#4748d1</color>
+    <color name="colorCorrectWeight">#3cb323</color>
 </resources>

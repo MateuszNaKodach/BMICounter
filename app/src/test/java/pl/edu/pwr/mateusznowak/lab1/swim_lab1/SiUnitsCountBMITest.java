@@ -3,6 +3,9 @@ package pl.edu.pwr.mateusznowak.lab1.swim_lab1;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.edu.pwr.mateusznowak.lab1.swim_lab1.buisnesslogic.implementations.BmiCounterForSiUnits;
+import pl.edu.pwr.mateusznowak.lab1.swim_lab1.buisnesslogic.interfaces.IBmiCounter;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -11,13 +14,13 @@ import static junit.framework.Assert.assertTrue;
  * Created by Mateusz on 20.03.2017.
  */
 
-public class CountBMITest {
+public class SiUnitsCountBMITest {
 
-    private ICountBMI countMBI;
+    private IBmiCounter countMBI;
 
     @Before
     public void initCountBMIForKgM(){
-        countMBI = new CountBMIForKgM();
+        countMBI = new BmiCounterForSiUnits();
     }
 
     @Test
@@ -25,7 +28,7 @@ public class CountBMITest {
         //GIVEN
         float testMass = -1.0f;
         //WHEN
-        //ICountBMI countMBI = new CountBMIForKgM();
+        //IBmiCounter countMBI = new BmiCounterForSiUnits();
         //THEN
         boolean actual = countMBI.isValidMass(testMass);
 
@@ -37,7 +40,7 @@ public class CountBMITest {
         //GIVEN
         float testMass = 0.0f;
         //WHEN
-        //ICountBMI countMBI = new CountBMIForKgM();
+        //IBmiCounter countMBI = new BmiCounterForSiUnits();
         //THEN
         boolean actual = countMBI.isValidMass(testMass);
 
