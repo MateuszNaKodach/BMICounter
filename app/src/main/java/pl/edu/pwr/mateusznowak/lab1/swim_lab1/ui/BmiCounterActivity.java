@@ -11,10 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,10 +31,6 @@ public class BmiCounterActivity extends AppCompatActivity {
     @BindView(R.id.button_countBmi) Button countBmiButton;
     @BindView(R.id.textView_BmiCondition) TextView bmiConditionTextView;
 
-    private static final String SHARED_PREFERENCES = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.SHARED_PREFERENCES";
-    private static final String SHARED_PREFERENCE_UNITS =
-            "pl.edu.pwr.mateusznowak.lab1.swim_lab1.SHARED_PREFERENCE_UNITS";
-
     private IBmiCounter selectedBmiCounter;
     //Toole: Apium, Espresso
 
@@ -52,6 +44,15 @@ public class BmiCounterActivity extends AppCompatActivity {
         initBmiCounter();
         setupUserInterfaceDefaults();
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(massAndHeightFieldsNotEmpty())
+            countBmi();
+    }
+
 
     private void initBmiCounter(){
         selectedBmiCounter = new BmiCounterForSiUnits();
@@ -89,17 +90,25 @@ public class BmiCounterActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_countBmi)
     public void onCountBmiButtonClicked(View view){
-        if(validateFields()) {
+        countBmi();
+    }
+
+    public void countBmi(){
+        if(massAndHeightFieldsNotEmpty()) {
             try {
-                final Float countedBmi = getCurrentCountedBmi();
-                updateBmiValueTextView(countedBmi);
-                updateBmiConditionTextView(countedBmi);
+                countBmiOnNotEmptyFields();
             }catch(IllegalArgumentException e){
                 showUnrealInputToast();
             }
         }else{
             showInvalidFieldsToast();
         }
+    }
+
+    private void countBmiOnNotEmptyFields() {
+        final Float countedBmi = getCurrentCountedBmi();
+        updateBmiValueTextView(countedBmi);
+        updateBmiConditionTextView(countedBmi);
     }
 
     private Float getCurrentCountedBmi(){
@@ -164,7 +173,7 @@ public class BmiCounterActivity extends AppCompatActivity {
         Toast.makeText(this,R.string.unreal_input_message,Toast.LENGTH_SHORT).show();
     }
 
-    private boolean validateFields(){
+    private boolean massAndHeightFieldsNotEmpty(){
         return !TextUtils.isEmpty(heightEditText.getText()) &&
                 !TextUtils.isEmpty(massEditText.getText());
     }
