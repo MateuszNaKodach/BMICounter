@@ -24,6 +24,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="author_name">Mateusz Nowak</string>
     <string name="author_sentence">Cześć przyjacielu! \tTo właśnie ja zrobiłem ten niepowtarzalny, super nowoczesny kalkulator BMI. \tJeśli dzięki mnie uratujesz swoją sylwetkę w ramach wdzięcznośc możesz wesprzeć mnie dobrowolnym datkiem. \tMasz może do mnie pytanie (jak np. numer konta)? Nie krępuj się pisać: kontakt.mateusznowak@gmail.com</string>
-    <string name="share_correct_bmi">Moje BMI to: %1$s Patrzcie jakie ze mnie ciacho!</string>
-    <string name="share_bad_bmi">Moje BMI to: %1$s Nie wiadomo ile jeszcze pożyję... To może się spotkamy?</string>
+    <string name="share_correct_bmi">#BMI #Ciacho #Siłka #JestMoc #WezMnie #Przystojniak Moje BMI to: %1$s Patrzcie jakie ze mnie ciacho!</string>
+    <string name="share_bad_bmi">#BMI #Niegrozny #KorzystacZZycia #Meeting Moje BMI to: %1$s Nie wiadomo ile jeszcze pożyję... To może się spotkamy?</string>
 </resources>

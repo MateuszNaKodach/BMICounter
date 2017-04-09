@@ -1,6 +1,8 @@
 package pl.edu.pwr.mateusznowak.lab1.swim_lab1.ui;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.List;
+
 import butterknife.OnClick;
 import pl.edu.pwr.mateusznowak.lab1.swim_lab1.R;
+import pl.edu.pwr.mateusznowak.lab1.swim_lab1.util.Intents;
 
 public class AuthorActivity extends AppCompatActivity {
 
@@ -24,7 +29,7 @@ public class AuthorActivity extends AppCompatActivity {
         setTitle(R.string.author_name);
 
         gitHubFab= (FloatingActionButton) findViewById(R.id.fab_GitHub);
-        
+
         gitHubFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,9 +39,12 @@ public class AuthorActivity extends AppCompatActivity {
     }
 
     private void onGitHubFabClick(){
-        Log.d("Button","Clicked");
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.github.com/nowakprojects"));
-        startActivity(browserIntent);
+
+        if(Intents.isIntentSafe(AuthorActivity.this,browserIntent)) {
+            startActivity(browserIntent);
+        }
     }
+
 
 }

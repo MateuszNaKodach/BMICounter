@@ -29,6 +29,7 @@ import pl.edu.pwr.mateusznowak.lab1.swim_lab1.buisnesslogic.implementations.BmiC
 import pl.edu.pwr.mateusznowak.lab1.swim_lab1.buisnesslogic.implementations.BmiCounterForSiUnits;
 import pl.edu.pwr.mateusznowak.lab1.swim_lab1.buisnesslogic.implementations.BmiCounterUnits;
 import pl.edu.pwr.mateusznowak.lab1.swim_lab1.buisnesslogic.interfaces.IBmiCounter;
+import pl.edu.pwr.mateusznowak.lab1.swim_lab1.util.Intents;
 
 public class BmiCounterActivity extends AppCompatActivity {
 
@@ -181,7 +182,10 @@ public class BmiCounterActivity extends AppCompatActivity {
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, getCountedBmiConditionShareText());
         sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+
+        if(Intents.isIntentSafe(BmiCounterActivity.this,sendIntent)) {
+            startActivity(sendIntent);
+        }
     }
 
     private String getCountedBmiConditionShareText() {
