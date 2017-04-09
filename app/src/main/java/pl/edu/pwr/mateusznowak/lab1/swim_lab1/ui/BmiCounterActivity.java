@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -34,10 +36,12 @@ public class BmiCounterActivity extends AppCompatActivity {
     private static final String SHARED_PREFERENCES_HEIGHT = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.SHARED_PREFERENCES_HEIGHT";
     private static final String SHARED_PREFERENCES_UNITS = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.SHARED_PREFERENCES_UNITS";
 
-    //    private static final String INSTANT_STATE_MASS = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_MASS";
-//    private static final String INSTANT_STATE_HEIGHT = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_HEIGHT";
+    private static final String INSTANT_STATE_MASS = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_MASS";
+    private static final String INSTANT_STATE_HEIGHT = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_HEIGHT";
     private static final String INSTANT_STATE_COUNTED_BMI = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_COUNTED_BMI";
     private static final String INSTANT_STATE_BMI_CONDITION = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_BMI_CONDITION";
+    private static final String INSTANT_STATE_BMI_CONDITION_COLOR = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_BMI_CONDITION_COLOR";
+
 
     @BindView(R.id.editText_Height)
     EditText heightEditText;
@@ -53,26 +57,13 @@ public class BmiCounterActivity extends AppCompatActivity {
     Button countBmiButton;
     @BindView(R.id.textView_BmiCondition)
     TextView bmiConditionTextView;
+
     private Menu optionsMenu;
 
     private SharedPreferences sharedPreferences;
 
     private IBmiCounter selectedBmiCounter;
-    //Toole: Apium, Espresso
 
-    //ma miec mass do wpisania, height, do wpsania, count bmi button i wyswietlac BMI, pan uzywa massET (ze to jest masa edit text
-
-    //DODAC ZAPISYWANIE JEDNOTSTEK!!!!
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadMassAndHeightSharedPreferences();
-        if (massAndHeightAreValid())
-            countBmi();
-        updateSaveMenuOptionState();
-        updateShareMenuOptionState();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,16 +73,68 @@ public class BmiCounterActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initSharedPreferences();
         initBmiCounter();
-        //setupUserInterfaceDefaults();
-       // loadMassAndHeightSharedPreferences();
+        setupUserInterfaceDefaults();
+        loadMassAndHeightSharedPreferences();
     }
 
-    //TODO: Save and Share just after onCreate!
+
+
+    private void initSharedPreferences() {
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+    }
+
+    private void setupUserInterfaceDefaults() {
+        setupProperUnitsSymbols();
+        setAllTextViewsToDefaultValues();
+    }
+
+    private void setAllTextViewsToDefaultValues() {
+        massEditText.getText().clear();
+        heightEditText.getText().clear();
+        countedBmiTextView.setText(getString(R.string.your_bmi, getString(R.string.empty_bmi)));
+        bmiConditionTextView.setText(getString(R.string.empty_bmi));
+    }
+
+    private void setupProperUnitsSymbols() {
+        if (isImperialBmiCounterSelected()) {
+            massTextView.setText(getString(R.string.mass, getString(R.string.pound_lb)));
+            heightTextView.setText(getString(R.string.height, getString(R.string.inch_in)));
+        } else if (isSiBmiCounterSelected()) {
+            massTextView.setText(getString(R.string.mass, getString(R.string.kilogram_kg)));
+            heightTextView.setText(getString(R.string.height, getString(R.string.meter_m)));
+        }
+    }
+
+    private boolean isImperialBmiCounterSelected() {
+        return selectedBmiCounter instanceof BmiCounterForImperialUnits;
+    }
+
+    private boolean isSiBmiCounterSelected() {
+        return selectedBmiCounter instanceof BmiCounterForSiUnits;
+    }
+
+    private void loadMassAndHeightSharedPreferences() {
+        massEditText.setText(sharedPreferences.getString(SHARED_PREFERENCES_MASS, ""));
+        heightEditText.setText(sharedPreferences.getString(SHARED_PREFERENCES_HEIGHT, ""));
+        selectedBmiCounter = BmiCounterAbstractFactory.getBmiCounter(
+                sharedPreferences.getString(SHARED_PREFERENCES_UNITS, BmiCounterUnits.SI.getName()));
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (massAndHeightAreValid()) {
+            countBmi();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        optionsMenu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        optionsMenu = menu;
+        updateSaveMenuOptionState();
+        updateShareMenuOptionState();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -117,6 +160,19 @@ public class BmiCounterActivity extends AppCompatActivity {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    private void onBmiCounterSelected(MenuItem item) {
+        item.setChecked(!item.isChecked());
+        if (item.getItemId() == R.id.menu_imp_units) {
+            selectedBmiCounter = BmiCounterAbstractFactory.getBmiCounter(
+                    BmiCounterUnits.IMPERIALS
+            );
+        } else if (item.getItemId() == R.id.menu_si_units) {
+            selectedBmiCounter = BmiCounterAbstractFactory.getBmiCounter(
+                    BmiCounterUnits.SI
+            );
         }
     }
 
@@ -170,81 +226,34 @@ public class BmiCounterActivity extends AppCompatActivity {
         }
     }
 
-    private void initSharedPreferences() {
-        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-    }
-
-    private void saveMassAndHeightToSharedPreferences() {
-        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-        sharedPreferencesEditor.putString(SHARED_PREFERENCES_MASS, massEditText.getText().toString());
-        sharedPreferencesEditor.putString(SHARED_PREFERENCES_HEIGHT, heightEditText.getText().toString());
-        sharedPreferencesEditor.putString(SHARED_PREFERENCES_UNITS, selectedBmiCounter.getBmiCounterUnitsName());
-        sharedPreferencesEditor.apply();
-    }
-
-    private void loadMassAndHeightSharedPreferences() {
-        massEditText.setText(sharedPreferences.getString(SHARED_PREFERENCES_MASS, ""));
-        heightEditText.setText(sharedPreferences.getString(SHARED_PREFERENCES_HEIGHT, ""));
-        selectedBmiCounter = BmiCounterAbstractFactory.getBmiCounter(
-                sharedPreferences.getString(SHARED_PREFERENCES_UNITS, BmiCounterUnits.SI.getName()));
-    }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putString(INSTANT_STATE_COUNTED_BMI, countedBmiTextView.getText().toString());
         outState.putString(INSTANT_STATE_BMI_CONDITION, bmiConditionTextView.getText().toString());
+        outState.putInt(INSTANT_STATE_BMI_CONDITION_COLOR,bmiConditionTextView.getCurrentTextColor());
+        outState.putString(INSTANT_STATE_MASS, massEditText.getText().toString());
+        outState.putString(INSTANT_STATE_HEIGHT,heightEditText.getText().toString());
+        super.onSaveInstanceState(outState);
     }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         countedBmiTextView.setText(savedInstanceState.getString(INSTANT_STATE_COUNTED_BMI));
         bmiConditionTextView.setText(savedInstanceState.getString(INSTANT_STATE_BMI_CONDITION));
+        bmiConditionTextView.setTextColor(savedInstanceState.getInt(INSTANT_STATE_BMI_CONDITION_COLOR));
+        massEditText.setText(savedInstanceState.getString(INSTANT_STATE_MASS));
+        heightEditText.setText(savedInstanceState.getString(INSTANT_STATE_HEIGHT));
     }
 
     private void initBmiCounter() {
         selectedBmiCounter = new BmiCounterForSiUnits();
     }
 
-    private void setupUserInterfaceDefaults() {
-        setupProperUnitsSymbols();
-        setAllTextViewsToDefaultValues();
-        updateSaveMenuOptionState();
-        updateShareMenuOptionState();
-    }
-
-    private void setAllTextViewsToDefaultValues() {
-        massEditText.getText().clear();
-        heightEditText.getText().clear();
-        countedBmiTextView.setText(getString(R.string.your_bmi, getString(R.string.empty_bmi)));
-        bmiConditionTextView.setText(getString(R.string.empty_bmi));
-    }
-
-    private void setupProperUnitsSymbols() {
-        if (isImperialBmiCounterSelected()) {
-            massTextView.setText(getString(R.string.mass, getString(R.string.pound_lb)));
-            heightTextView.setText(getString(R.string.height, getString(R.string.inch_in)));
-        } else if (isSiBmiCounterSelected()) {
-            massTextView.setText(getString(R.string.mass, getString(R.string.kilogram_kg)));
-            heightTextView.setText(getString(R.string.height, getString(R.string.meter_m)));
-        }
-    }
-
-    private boolean isImperialBmiCounterSelected() {
-        return selectedBmiCounter instanceof BmiCounterForImperialUnits;
-    }
-
-    private boolean isSiBmiCounterSelected() {
-        return selectedBmiCounter instanceof BmiCounterForSiUnits;
-    }
 
     @OnClick(R.id.button_countBmi)
-    public void onCountBmiButtonClicked() {
-        countBmi();
-    }
-
     public void countBmi() {
         if (massAndHeightAreValid()) {
             try {
@@ -297,18 +306,14 @@ public class BmiCounterActivity extends AppCompatActivity {
             showUnrealInputToast();
     }
 
-    private void onBmiCounterSelected(MenuItem item) {
-        item.setChecked(!item.isChecked());
-        if (item.getItemId() == R.id.menu_imp_units) {
-            selectedBmiCounter = BmiCounterAbstractFactory.getBmiCounter(
-                    BmiCounterUnits.IMPERIALS
-            );
-        } else if (item.getItemId() == R.id.menu_si_units) {
-            selectedBmiCounter = BmiCounterAbstractFactory.getBmiCounter(
-                    BmiCounterUnits.SI
-            );
-        }
+    private void saveMassAndHeightToSharedPreferences() {
+        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+        sharedPreferencesEditor.putString(SHARED_PREFERENCES_MASS, massEditText.getText().toString());
+        sharedPreferencesEditor.putString(SHARED_PREFERENCES_HEIGHT, heightEditText.getText().toString());
+        sharedPreferencesEditor.putString(SHARED_PREFERENCES_UNITS, selectedBmiCounter.getBmiCounterUnitsName());
+        sharedPreferencesEditor.apply();
     }
+
 
     private void showInvalidFieldsToast() {
         Toast.makeText(this, R.string.invalidate_field_message, Toast.LENGTH_SHORT).show();
@@ -329,7 +334,7 @@ public class BmiCounterActivity extends AppCompatActivity {
     }
 
     private boolean isBmiAlreadyCounted() {
-        return !bmiConditionTextView.getText().equals(getString(R.string.empty_bmi));
+        return !bmiConditionTextView.getText().toString().equals(getString(R.string.empty_bmi));
     }
 
 }
