@@ -8,4 +8,5 @@ public interface IBmiCounter {
     boolean isValidMass(float mass);
     boolean isValidHeight(float height);
     float countBMI(float mass, float height) throws IllegalArgumentException;
+    String getBmiCounterUnitsName();
 }

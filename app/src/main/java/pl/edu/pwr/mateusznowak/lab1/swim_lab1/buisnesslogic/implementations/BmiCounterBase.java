@@ -8,10 +8,12 @@ import pl.edu.pwr.mateusznowak.lab1.swim_lab1.buisnesslogic.interfaces.IBmiCount
 
 public abstract class BmiCounterBase implements IBmiCounter {
 
-    protected static float minHeight = 0.5f;
-    protected static float maxHeight = 2.5f;
-    protected static float minMass = 10;
-    protected static float maxMass = 250;
+    protected BmiCounterUnits bmiCounterUnits;
+
+    protected static float minHeight;
+    protected static float maxHeight;
+    protected static float minMass;
+    protected static float maxMass;
 
 
     protected abstract void initMinAndMaxValues();
@@ -34,4 +36,12 @@ public abstract class BmiCounterBase implements IBmiCounter {
         return mass/(height*height);
     }
 
+    public BmiCounterUnits getBmiCounterUnits() {
+        return bmiCounterUnits;
+    }
+
+    @Override
+    public String getBmiCounterUnitsName() {
+        return bmiCounterUnits.getName();
+    }
 }

@@ -8,13 +8,16 @@ import pl.edu.pwr.mateusznowak.lab1.swim_lab1.buisnesslogic.interfaces.IBmiCount
 
 public abstract class BmiCounterAbstractFactory {
 
-    public enum BmiCounterUnits{
-        SI,
-        IMPERIALS;
-    }
-
     public static IBmiCounter getBmiCounter(BmiCounterUnits bmiCounterUnits){
         if(bmiCounterUnits == BmiCounterUnits.IMPERIALS)
+            return getBmiCounterForImperialUnits();
+        else
+            return getBmiCounterForSiUnits();
+    }
+
+
+    public static IBmiCounter getBmiCounter(String bmiCounterUnits){
+        if(bmiCounterUnits == BmiCounterUnits.IMPERIALS.getName())
             return getBmiCounterForImperialUnits();
         else
             return getBmiCounterForSiUnits();

@@ -12,6 +12,7 @@ public class BmiCounterForImperialUnits extends BmiCounterBase {
 
     @Override
     protected void initMinAndMaxValues() {
+        bmiCounterUnits = BmiCounterUnits.IMPERIALS;
         minHeight = 0.5f*39.4f;
         maxHeight = 2.5f*39.4f;
         minMass = 10*2.2f;
