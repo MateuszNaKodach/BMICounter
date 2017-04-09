@@ -22,6 +22,9 @@ public class AuthorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_author);
         setTitle(R.string.author_name);
+
+        gitHubFab= (FloatingActionButton) findViewById(R.id.fab_GitHub);
+        
         gitHubFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
