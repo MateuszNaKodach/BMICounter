@@ -3,14 +3,12 @@ package pl.edu.pwr.mateusznowak.lab1.swim_lab1.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,6 +40,7 @@ public class BmiCounterActivity extends AppCompatActivity {
     private static final String INSTANT_STATE_COUNTED_BMI = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_COUNTED_BMI";
     private static final String INSTANT_STATE_BMI_CONDITION = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_BMI_CONDITION";
     private static final String INSTANT_STATE_BMI_CONDITION_COLOR = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_BMI_CONDITION_COLOR";
+    private static final String INSTANT_STATE_UNITS = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_UNITS";
 
 
     @BindView(R.id.editText_Height)
@@ -52,7 +51,7 @@ public class BmiCounterActivity extends AppCompatActivity {
     TextView heightTextView;
     @BindView(R.id.textView_Mass)
     TextView massTextView;
-    @BindView(R.id.textView_YourBMI)
+    @BindView(R.id.textView_BMI)
     TextView countedBmiTextView;
     @BindView(R.id.button_countBmi)
     Button countBmiButton;
@@ -94,6 +93,7 @@ public class BmiCounterActivity extends AppCompatActivity {
         heightEditText.getText().clear();
         countedBmiTextView.setText(getString(R.string.empty_bmi));
         bmiConditionTextView.setText(getString(R.string.empty_bmi));
+        bmiConditionTextView.setTextColor(Color.BLACK);
     }
 
     private void setupProperUnitsSymbols() {
@@ -128,6 +128,7 @@ public class BmiCounterActivity extends AppCompatActivity {
         if (massAndHeightAreValid()) {
             countBmi();
         }
+        setupProperUnitsSymbols();
     }
 
     @Override
@@ -238,6 +239,7 @@ public class BmiCounterActivity extends AppCompatActivity {
         outState.putInt(INSTANT_STATE_BMI_CONDITION_COLOR,bmiConditionTextView.getCurrentTextColor());
         outState.putString(INSTANT_STATE_MASS, massEditText.getText().toString());
         outState.putString(INSTANT_STATE_HEIGHT,heightEditText.getText().toString());
+        outState.putString(INSTANT_STATE_UNITS,selectedBmiCounter.getBmiCounterUnitsName());
         super.onSaveInstanceState(outState);
     }
 
@@ -250,6 +252,8 @@ public class BmiCounterActivity extends AppCompatActivity {
         bmiConditionTextView.setTextColor(savedInstanceState.getInt(INSTANT_STATE_BMI_CONDITION_COLOR));
         massEditText.setText(savedInstanceState.getString(INSTANT_STATE_MASS));
         heightEditText.setText(savedInstanceState.getString(INSTANT_STATE_HEIGHT));
+        selectedBmiCounter = BmiCounterAbstractFactory.getBmiCounter(
+                savedInstanceState.getString(INSTANT_STATE_UNITS));
     }
 
     private void initBmiCounter() {
