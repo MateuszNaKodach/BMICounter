@@ -92,7 +92,7 @@ public class BmiCounterActivity extends AppCompatActivity {
     private void setAllTextViewsToDefaultValues() {
         massEditText.getText().clear();
         heightEditText.getText().clear();
-        countedBmiTextView.setText(getString(R.string.your_bmi, getString(R.string.empty_bmi)));
+        countedBmiTextView.setText(getString(R.string.empty_bmi));
         bmiConditionTextView.setText(getString(R.string.empty_bmi));
     }
 

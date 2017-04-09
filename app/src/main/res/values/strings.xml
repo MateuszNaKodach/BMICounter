@@ -5,7 +5,6 @@
     <string name="your_height_here">Your height goes here</string>
     <string name="height">Height [%1$s]:</string>
     <string name="count_bmi">Count BMI</string>
-    <string name="your_bmi">Your BMI: %1$s</string>
     <string name="empty_bmi">---</string>
     <string name="si_units">SI Units</string>
     <string name="imperial_units">Imperial Units</string>
