@@ -37,9 +37,6 @@ public class BmiCounterActivity extends AppCompatActivity {
 
     private static final String INSTANT_STATE_MASS = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_MASS";
     private static final String INSTANT_STATE_HEIGHT = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_HEIGHT";
-    private static final String INSTANT_STATE_COUNTED_BMI = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_COUNTED_BMI";
-    private static final String INSTANT_STATE_BMI_CONDITION = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_BMI_CONDITION";
-    private static final String INSTANT_STATE_BMI_CONDITION_COLOR = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_BMI_CONDITION_COLOR";
     private static final String INSTANT_STATE_UNITS = "pl.edu.pwr.mateusznowak.lab1.swim_lab1.INSTANT_STATE_UNITS";
 
 
@@ -234,9 +231,6 @@ public class BmiCounterActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(INSTANT_STATE_COUNTED_BMI, countedBmiTextView.getText().toString());
-        outState.putString(INSTANT_STATE_BMI_CONDITION, bmiConditionTextView.getText().toString());
-        outState.putInt(INSTANT_STATE_BMI_CONDITION_COLOR,bmiConditionTextView.getCurrentTextColor());
         outState.putString(INSTANT_STATE_MASS, massEditText.getText().toString());
         outState.putString(INSTANT_STATE_HEIGHT,heightEditText.getText().toString());
         outState.putString(INSTANT_STATE_UNITS,selectedBmiCounter.getBmiCounterUnitsName());
@@ -247,9 +241,6 @@ public class BmiCounterActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        countedBmiTextView.setText(savedInstanceState.getString(INSTANT_STATE_COUNTED_BMI));
-        bmiConditionTextView.setText(savedInstanceState.getString(INSTANT_STATE_BMI_CONDITION));
-        bmiConditionTextView.setTextColor(savedInstanceState.getInt(INSTANT_STATE_BMI_CONDITION_COLOR));
         massEditText.setText(savedInstanceState.getString(INSTANT_STATE_MASS));
         heightEditText.setText(savedInstanceState.getString(INSTANT_STATE_HEIGHT));
         selectedBmiCounter = BmiCounterAbstractFactory.getBmiCounter(
